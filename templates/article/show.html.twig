@@ -32,10 +32,8 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="article-text">
-                            {{ article.content|markdown }}
-                        </div>
-                        <div class="article-text">
-                            {{ article.content|raw }}
+                            {# use cached_markdown new filter created with twig extension #}
+                            {{ article.content|cached_markdown }}
                         </div>
                     </div>
                 </div>
