@@ -1,6 +1,11 @@
+{# This is really cool because our template code can be simple: 
+    Twig figures out what to do. 
+    If you were printing a boolean field, something like article.published, 
+    Twig would also look for isPublished() a hasPublished() methods. 
+    And, if article were an array, the dot syntax would just fetch the keys off of that array. Twig: you're the bomb. #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Read: {{ title }}{% endblock %}
+{% block title %}Read: {{ article.title }}{% endblock %}
 
 {% block body %}
 
@@ -12,13 +17,14 @@
                     <div class="col-sm-12">
                         <img class="show-article-img" src="{{ asset('images/asteroid.jpeg') }}">
                         <div class="show-article-title-container d-inline-block pl-3 align-middle">
-                            <span class="show-article-title ">{{ title }}</span>
+                            <span class="show-article-title ">{{ article.title }}</span>
+                            {{dump(article.publishedAt)}}
                             <br>
                             <span class="align-left article-details"><img class="article-author-img rounded-circle" src="{{ asset('images/alien-profile.png') }}"> Mike Ferengi </span>
                             <span class="pl-2 article-details"> 4 hours ago</span>
                             <span class="pl-2 article-details">
                                 <span class="js-like-article-count">5</span>
-                                <a href="{{ path('article_toggle_heart', {slug: slug}) }}" class="fa fa-heart-o like-article js-like-article"></a>
+                                <a href="{{ path('article_toggle_heart', {slug: article.slug}) }}" class="fa fa-heart-o like-article js-like-article"></a>
                             </span>
                         </div>
                     </div>
@@ -26,7 +32,10 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="article-text">
-                            {{ articleContent|raw }}
+                            {{ article.content|markdown }}
+                        </div>
+                        <div class="article-text">
+                            {{ article.content|raw }}
                         </div>
                     </div>
                 </div>
