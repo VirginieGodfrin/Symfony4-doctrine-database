@@ -27,6 +27,8 @@ class Article
      */
     private $slug;
 
+    // nullable=true: it is allowed to be null in the database,
+    // If you don't see nullable, it uses the default value, which is false. 
     /**
      * @ORM\Column(type="text", nullable=true)
      */
@@ -36,6 +38,22 @@ class Article
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $publishedAt;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $author;
+
+    // set a default value
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $heartCount = 0;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $imageFileName;
 
     public function getId()
     {
@@ -88,5 +106,46 @@ class Article
         $this->publishedAt = $publishedAt;
 
         return $this;
+    }
+
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(string $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getHeartCount(): ?int
+    {
+        return $this->heartCount;
+    }
+
+    public function setHeartCount(int $heartCount): self
+    {
+        $this->heartCount = $heartCount;
+
+        return $this;
+    }
+
+    public function getImageFileName(): ?string
+    {
+        return $this->imageFileName;
+    }
+
+    public function setImageFileName(?string $imageFileName): self
+    {
+        $this->imageFileName = $imageFileName;
+
+        return $this;
+    }
+
+    public function getImagePath()
+    {
+        return 'images/'.$this->getImageFilename();
     }
 }

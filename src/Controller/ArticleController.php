@@ -10,7 +10,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 
@@ -47,23 +46,10 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}", name="article_show")
      */
-    public function show($slug, SlackClient $slack, EntityManagerInterface $em)
+    public function show(Article $article, SlackClient $slack)
     {
-        if ($slug === 'khaaaaaan') {
+        if ($article->getSlug() === 'khaaaaaan') {
             $slack->sendMessage('Kahn', 'Ah, Kirk, my old friend...');
-        }
-
-        // Get repository to query for data
-        $repository = $em->getRepository(Article::class);
-
-        // Comment data.
-        // Doctrine return Objects
-        /** @var Article $article */
-        $article = $repository->findOneBy(['slug' => $slug]);
-
-        // You can use createNotFoundException with abstractController it's return a NotFoundHttpException with notification
-        if (!$article) {
-            throw $this->createNotFoundException(sprintf('No article for slug "%s"', $slug));
         }
 
         $comments = [

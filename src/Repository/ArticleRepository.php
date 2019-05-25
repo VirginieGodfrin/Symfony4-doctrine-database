@@ -21,16 +21,28 @@ class ArticleRepository extends ServiceEntityRepository
 
     // Create a custome query method
     // with doctrine we work with object and his properties
+    
+    // The query logic:
+    // Create a first private methode that return a qb var with the andWhere clause
+    private function addIsPublishedQueryBuilder(QueryBuilder $qb = null){
+        return $this->getOrCreateQueryBuilder($qb)
+            ->andWhere('a.publishedAt IS NOT NULL');
+    }
+    // Create a second private methode
+    private function getOrCreateQueryBuilder(QueryBuilder $qb = null){
+        // if $qb is true return it or create a new queryBuilder
+        // Then the addIsPublishedQueryBuilder argument could be optional
+        return $qb ?: $this->createQueryBuilder('a');
+    }
    /**
     * @return Article[] Returns an array of Article objects
     */
     public function findAllPublishedOrderedByNewest()
     {
-        // the where clause will remove any previous where clauses 
-        // use andWhere for a better way
-        // getResult() return an array of article's objects
-        // getOneOrNullResult() return one article object
-        return $this->createQueryBuilder('a')
+        // $qb =  $this->createQueryBuilder('a');
+        // use addIsPublishedQueryBuilder with qb parameter
+        // The rest of the query can chain off of this.
+        return $this->addIsPublishedQueryBuilder()
             ->andWhere('a.publishedAt IS NOT NULL')
              ->orderBy('a.publishedAt', 'DESC')
             ->getQuery()
