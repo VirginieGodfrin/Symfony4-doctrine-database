@@ -148,4 +148,14 @@ class Article
     {
         return 'images/'.$this->getImageFilename();
     }
+
+    // we not always need getter and setter 
+    // we can use more descriptive methods
+    // be descriptive!
+    public function incrementHeartCount(): self
+    {
+        $this->heartCount = $this->heartCount + 1;
+        return $this;
+
+    }
 }

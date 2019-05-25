@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-
+use Doctrine\ORM\EntityManagerInterface;
 
 class ArticleController extends AbstractController
 {
@@ -67,12 +67,22 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}/heart", name="article_toggle_heart", methods={"POST"})
      */
-    public function toggleArticleHeart($slug, LoggerInterface $logger)
-    {
-        // TODO - actually heart/unheart the article!
+    public function toggleArticleHeart(Article $article, LoggerInterface $logger, EntityManagerInterface $em)
+    {   
+        // don't do it in real life it'an exemple 
+        // situation de compétition -> race condition
+        // move this kind of code out of controller in a service or
+        // if logic is simple put it in entity
+        // $article->setHeartCount($article->getHeartCount() + 1);
+        $article->incrementHeartCount();
+        // No need persist() for updates.
+        // When you query Doctrine for an object, 
+        // it already knows that you want that object to be saved to the database when you call flush(). 
+        // Doctrine is also smart enough to know that it should update the object, instead of inserting a new one.
+        $em->flush();
 
         $logger->info('Article is being hearted!');
 
-        return new JsonResponse(['hearts' => rand(5, 100)]);
+        return new JsonResponse(['hearts' => $article->getHeartCount()]);
     }
 }
