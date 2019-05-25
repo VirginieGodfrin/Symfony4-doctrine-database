@@ -10,14 +10,31 @@ use App\Entity\Article;
 // Important call it classNameFixtures
 class ArticleFixtures extends BaseFixture
 {
+	private static $articleTitles = [
+			'Why Asteroids Taste Like Bacon',
+			'Life on Planet Mercury: Tan, Relaxing and Fabulous',
+			'Light Speed Travel: Fountain of Youth or Fallacy',
+		];
+
+	private static $articleImages = [
+			'asteroid.jpeg',
+			'mercury.jpeg',
+			'lightspeed.png',
+		];
+
+	private static $articleAuthors = [
+			'Mike Ferengi',
+			'Amy Oort',
+		];
+
     public function loadData(ObjectManager $manager)
     {
     	// call the create many methode of baseFixture pass it, the entity class, nb fixture, 
     	// and an anonymous function typeHint the entity object and a count var
 		$this->createMany(Article::class, 10, function(Article $article, $count) 
 		{
-			$article->setTitle('Why Asteroids Taste Like Bacon');
-			$article->setSlug('why-asteroids-taste-like-bacon-'. $count);
+			$article->setTitle($this->faker->randomElement(self::$articleTitles));
+			$article->setSlug($this->faker->slug);
 
 			$article->setContent(<<<EOF
 Spicy **jalapeno bacon** ipsum dolor amet veniam shank in dolore. Ham hock nisi landjaeger cow,
@@ -37,13 +54,14 @@ fugiat.
 EOF
 			);
 
-			if (rand(1, 10) > 2) {
-	            $article->setPublishedAt(new \DateTime(sprintf('-%d days', rand(1, 100))));
+			// publish most articles
+            if ($this->faker->boolean(70)) {
+	            $article->setPublishedAt($this->faker->dateTimeBetween('-100 days', '-1 days'));
 	        }
 
-	        $article->setAuthor('Mike Ferengi');
-	        $article->setHeartCount(rand(5, 100));
-	        $article->setImageFilename('asteroid.jpeg');
+	        $article->setAuthor($this->faker->randomElement(self::$articleAuthors));
+	        $article->setHeartCount($this->faker->numberBetween(5, 100));
+	        $article->setImageFilename($this->faker->randomElement(self::$articleImages));
 
     	});
         
