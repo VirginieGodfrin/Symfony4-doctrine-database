@@ -24,6 +24,7 @@ class Article
     // unique=true : tells Doctrine that it should create a unique index in the database for this column.
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Gedmo\Slug(fields={"title"})
      */
     private $slug;
 

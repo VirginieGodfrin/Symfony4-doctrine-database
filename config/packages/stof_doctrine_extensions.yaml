@@ -1,0 +1,11 @@
+# Read the documentation: https://symfony.com/doc/current/bundles/StofDoctrineExtensionsBundle/index.html
+# See the official DoctrineExtensions documentation for more details: https://github.com/Atlantic18/DoctrineExtensions/tree/master/doc/
+stof_doctrine_extensions:
+    default_locale: en_US
+    orm:
+        default:
+            sluggable: true
+
+# nb: The doctrine Event subscriber, event système to automatically update a search system.
+# the sluggable features works by adding an event listener that is called right before saving, or "flushing", any entity.
+# If you ever need to do something automatically when an entity is added, updated or removed, think of this system.
