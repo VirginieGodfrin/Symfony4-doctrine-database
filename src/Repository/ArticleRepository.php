@@ -20,16 +20,19 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     // Create a custome query method
+    // with doctrine we work with object and his properties
    /**
     * @return Article[] Returns an array of Article objects
     */
     public function findAllPublishedOrderedByNewest()
     {
+        // the where clause will remove any previous where clauses 
+        // use andWhere for a better way
+        // getResult() return an array of article's objects
+        // getOneOrNullResult() return one article object
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
+            ->andWhere('a.publishedAt IS NOT NULL')
+             ->orderBy('a.publishedAt', 'DESC')
             ->getQuery()
             ->getResult()
         ;

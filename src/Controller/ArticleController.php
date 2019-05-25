@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Article;
+use App\Repository\ArticleRepository;
 
 
 class ArticleController extends AbstractController
@@ -26,28 +27,18 @@ class ArticleController extends AbstractController
         $this->isDebug = $isDebug;
     }
 
+    // Remember service's config: classes in src/ available to be used as services
+    // Use ArticleRepository like one of them
+
     /**
      * @Route("/", name="app_homepage")
      */
-    public function homepage(EntityManagerInterface $em)
+    public function homepage(ArticleRepository $repository)
     {
-        $repository = $em->getRepository(Article::class);
-        // findAll() gives us everything
-        $articles1 = $repository->findAll();
-        dump($articles1);
-        // findBy() is more flexible, you can manage query with argument 
-        // The first array take the critéria for the where clause, if we pass nothing we get all
-        $articles2 = $repository->findBy(['id' => 2]);
-        dump($articles2);
-        // 'in order desc'
-        $articles3 = $repository->findBy([], ['publishedAt' => 'DESC']);
-        dump($articles3);
-
-        dump($repository);
-
+        // $repository = $em->getRepository(Article::class);
         // use a custom query method
         $articles = $repository->findAllPublishedOrderedByNewest();
-
+        dump($articles);
         return $this->render('article/homepage.html.twig',[
             'articles' => $articles,
         ]);
