@@ -5,6 +5,7 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+            timestampable: true
 
 # nb: The doctrine Event subscriber, event système to automatically update a search system.
 # the sluggable features works by adding an event listener that is called right before saving, or "flushing", any entity.

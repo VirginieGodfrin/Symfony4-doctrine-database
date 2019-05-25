@@ -23,6 +23,7 @@ final class Version20190525172611 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
         // the new migration change created_at DATETIME NOT NULL and updated_at DATETIME NOT NULL
         $this->addSql('ALTER TABLE article CHANGE created_at created_at DATETIME NOT NULL, CHANGE updated_at updated_at DATETIME NOT NULL');
+        // anyway we got dateTime data in column and contraints on it !
     }
 
     public function down(Schema $schema) : void
