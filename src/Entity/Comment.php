@@ -31,6 +31,8 @@ class Comment
      */
     private $content;
 
+    // When you relate two entities together and save, 
+    // Doctrine only looks at the owning side of the relationship to figure out what to persist to the database.
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Article", inversedBy="comments")
      * @ORM\JoinColumn(nullable=false)

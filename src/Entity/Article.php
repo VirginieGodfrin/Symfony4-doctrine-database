@@ -187,6 +187,9 @@ class Article
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
+            // Synchronizing the Owning Side
+            // It makes sure that if you add this Comment to this Article, 
+            // then the Article is also set on the Comment.
             $comment->setArticle($this);
         }
 
