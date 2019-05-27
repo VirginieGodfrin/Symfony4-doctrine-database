@@ -13,6 +13,7 @@ use Twig\Environment;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\CommentRepository;
 
 class ArticleController extends AbstractController
 {
@@ -46,21 +47,27 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}", name="article_show")
      */
-    public function show(Article $article, SlackClient $slack )
+    public function show(Article $article, SlackClient $slack)
     {
         if ($article->getSlug() === 'khaaaaaan') {
             $slack->sendMessage('Kahn', 'Ah, Kirk, my old friend...');
         }
 
-        $comments = [
-            'I ate a normal rock once. It did NOT taste like bacon!',
-            'Woohoo! I\'m going on an all-asteroid diet!',
-            'I like bacon too! Buy some from my site! bakinsomebacon.com',
-        ];
+        // $comments = $commentRepository->findBy(['article' => $article]);
+        // When we call getComments(), Doctrine makes a query in the background to go get the comment data.
+        // This is called "lazy loading": related data is not queried for until, and unless, we use it. 
+        // To make this magic possible, Doctrine uses this PersistentCollection object. 
+        // This is not something you need to think or worry about: this object looks and acts like an array.
+
+        // $comments = $article->getComments();
+        // dump($comments);
+
+        // foreach ($comments as $comment) {
+        //     dump($comment);
+        // }
 
         return $this->render('article/show.html.twig', [
             'article' => $article,
-            'comments' => $comments
         ]);
     }
 
