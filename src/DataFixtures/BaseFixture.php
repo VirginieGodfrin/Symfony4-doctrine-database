@@ -32,6 +32,9 @@ abstract class BaseFixture extends Fixture
 
             $this->manager->persist($entity);
             // store for usage later as App\Entity\ClassName_#COUNT#
+            // This reference system is a little "extra" built into Doctrine's fixtures library. 
+            // When you add a "reference" from one fixture class, you can fetch it out in another class. 
+            // It's super handy when you need to relate entities. And hey, that's exactly what we're trying to do!
             $this->addReference($className . '_' . $i, $entity);
         }
     }
