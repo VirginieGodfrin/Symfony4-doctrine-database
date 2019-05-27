@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\Article;
+use App\Entity\Comment;
 
 
 // Important call it classNameFixtures
@@ -31,7 +32,9 @@ class ArticleFixtures extends BaseFixture
     {
     	// call the create many methode of baseFixture pass it, the entity class, nb fixture, 
     	// and an anonymous function typeHint the entity object and a count var
-		$this->createMany(Article::class, 10, function(Article $article, $count) 
+
+    	// use manager to persist inverse entity
+		$this->createMany(Article::class, 10, function(Article $article, $count) use ($manager)
 		{
 			$article->setTitle($this->faker->randomElement(self::$articleTitles));
 			$article->setContent(<<<EOF
@@ -61,8 +64,18 @@ EOF
 	        $article->setHeartCount($this->faker->numberBetween(5, 100));
 	        $article->setImageFilename($this->faker->randomElement(self::$articleImages));
 
+			$comment1 = new Comment();
+			$comment1->setAuthorName('Mike Ferengi');
+			$comment1->setContent('I ate a normal rock once. It did NOT taste like bacon!');
+			$comment1->setArticle($article);
+			$manager->persist($comment1);
+			$comment2 = new Comment();
+			$comment2->setAuthorName('Mike Ferengi');
+			$comment2->setContent('Woohoo! I\'m going on an all-asteroid diet!');
+			$comment2->setArticle($article);
+			$manager->persist($comment2);
     	});
-        
+    	
         $manager->flush();
     }
 }
