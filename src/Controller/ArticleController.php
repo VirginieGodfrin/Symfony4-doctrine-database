@@ -38,7 +38,7 @@ class ArticleController extends AbstractController
         // $repository = $em->getRepository(Article::class);
         // use a custom query method
         $articles = $repository->findAllPublishedOrderedByNewest();
-        dump($articles);
+        
         return $this->render('article/homepage.html.twig',[
             'articles' => $articles,
         ]);
