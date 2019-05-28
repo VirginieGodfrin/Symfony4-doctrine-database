@@ -1,0 +1,15 @@
+{% extends 'content_base.html.twig' %}
+
+{# overide the block content_class #}
+{# use parent() tu use the predefined class and add the rest of class #}
+{% block title %}Manage Comments{% endblock %}
+
+{% block content_class %}{{ parent() }} show-article-container-border-green {% endblock %}
+
+{% block content_body %}
+	<div class="row">
+	    <div class="col-sm-12">
+	        <h1>Manage Comments</h1>
+	    </div>
+	</div>
+{% endblock %}
