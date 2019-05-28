@@ -37,6 +37,7 @@ class Article
     // If you don't see nullable, it uses the default value, which is false. 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * 
      */
     private $content;
 
@@ -61,8 +62,13 @@ class Article
      */
     private $imageFileName;
 
+    // the lazy loading systeme: when you query on an entity doctrine query also on the mapped field 
+    // for one query on article there is many query for comments.
+    // Extra_lazy symplify the query on the mapped field and return result from only one query parameter -> count
+    // To use with tweezers !!! This is not the best way to improve performance !
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="article", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     private $comments;
 
@@ -207,5 +213,13 @@ class Article
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getNonDeletedComments(): Collection
+    {
+        return $this->comments;
     }
 }

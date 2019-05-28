@@ -22,6 +22,9 @@ class CommentFixtures extends BaseFixture implements DependentFixtureInterface
         	$comment->setAuthorName($this->faker->name);
         	$comment->setCreatedAt($this->faker->dateTimeBetween('-1 months', '-1 seconds'));
 
+            // So, out of the 100 comments, approximately 20 of them will be marked as deleted.
+            $comment->setIsDeleted($this->faker->boolean(20));
+
         	// $comment->setArticle($this->getReference(Article::class.'_0'));
             // That is much better! Just like that, each comment is related to a random article! 
             // $comment->setArticle($this->getReference(Article::class.'_'.$this->faker->numberBetween(0, 9)));
