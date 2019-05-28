@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Doctrine\Common\Collections\Criteria;
+use App\Repository\CommentRepository;
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
  */
@@ -220,6 +223,23 @@ class Article
      */
     public function getNonDeletedComments(): Collection
     {
-        return $this->comments;
+        // Crtieria is like QueryBuilder with a different syntax
+        // in ANDWHERE use Criteria::expr()
+            // eq() -> equal
+            // gt() -> greater than
+            // gte() -> greater than or equal
+        
+        // $criteria = Criteria::create()
+        //     ->andWhere(Criteria::expr()->eq('isDeleted', false))
+        //     ->orderBy(['createdAt' => 'DESC']);
+
+        // ! Organise criteria logic systeme in repository !    
+        $criteria = CommentRepository::createNonDeletedCriteria();
+
+        // comment is an object and we can use somme extar helper method on it
+        return $this->comments->matching($criteria);
+
+        // Crterie is an efficient filtering système. If you have a big collection 
+        // and need to return only a small number of results, you should use Criteria immediately.
     }
 }

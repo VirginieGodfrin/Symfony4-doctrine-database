@@ -39,9 +39,10 @@ class ArticleRepository extends ServiceEntityRepository
     */
     public function findAllPublishedOrderedByNewest()
     {
-        // $qb =  $this->createQueryBuilder('a');
-        // use addIsPublishedQueryBuilder with qb parameter
-        // The rest of the query can chain off of this.
+        // re-use the createNonDeletedCriteria query
+         $this->createQueryBuilder('a')
+            ->addCriteria(CommentRepository::createNonDeletedCriteria());
+
         return $this->addIsPublishedQueryBuilder()
             ->andWhere('a.publishedAt IS NOT NULL')
              ->orderBy('a.publishedAt', 'DESC')
@@ -49,7 +50,6 @@ class ArticleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
 
     /*
     public function findOneBySomeField($value): ?Article
