@@ -34,10 +34,15 @@ class CommentRepository extends ServiceEntityRepository
      */
     public function findAllWithSearch(?string $term){
 
-        $qb = $this->createQueryBuilder('c');
+        // innerjoin beacause comment is owner
+        // With addSelect('a'), we're telling the QueryBuilder to select 
+        // all of the comment columns and all of the article columns.
+        $qb = $this->createQueryBuilder('c') 
+            ->innerJoin('c.article', 'a')
+            ->addSelect('a');
 
         if ($term) {
-            $qb->andWhere('c.content LIKE :term OR c.authorName LIKE :term')
+            $qb->andWhere('c.content LIKE :term OR c.authorName LIKE :term OR a.title LIKE :term')
                 ->setParameter('term', '%' . $term . '%')
             ;
         }
@@ -49,34 +54,14 @@ class CommentRepository extends ServiceEntityRepository
         ;
 
     }
-    
 
-//    /**
-//     * @return Comment[] Returns an array of Comment objects
-//     */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    // ccl: if your page has a lot of queries because Doctrine is making extra queries across a relationship, 
+    // just join over that relationship and use addSelect() to fetch all the data you need at once.
+    // But... there is one confusing thing about this. We're now selecting all of the comment data and all of the article data. 
+    // But... you'll notice, the page still works! What I mean is, even though we're suddenly selecting more data, 
+    // our findAllWithSearch() method still returns exactly what it did before: 
+    // it returns a array of Comment objects. It does not, for example, now return Comment and Article objects.
+    // Instead, Doctrine takes that extra article data and stores it in the background for later. 
+    // But, the new addSelect() does not affect the return value. That's way different than using raw SQL.
 
-    /*
-    public function findOneBySomeField($value): ?Comment
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
