@@ -1,0 +1,13 @@
+services:
+    _defaults:
+        public: false
+        autowire: true
+        autoconfigure: true
+
+    # Uncomment any lines below to activate that Twig extension
+    #Twig\Extensions\ArrayExtension: ~
+    #Twig\Extensions\DateExtension: ~
+    #Twig\Extensions\IntlExtension: ~
+    Twig\Extensions\TextExtension: ~
+    #  Oh, and the ~ means null: it means we don't need to configure this service 
+    #  in any special way. For example, we don't need to configure any arguments.

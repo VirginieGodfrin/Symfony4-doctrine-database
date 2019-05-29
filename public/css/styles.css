@@ -223,7 +223,9 @@ html {height:100%}
     }
 }
 
-
+.show-article-container-border-green {
+    border-top : 2px solid green;
+}
 
 /* FOOTER */
 
