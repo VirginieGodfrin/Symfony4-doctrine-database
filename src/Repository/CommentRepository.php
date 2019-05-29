@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
@@ -30,10 +31,9 @@ class CommentRepository extends ServiceEntityRepository
     // remeber LIKE (Doctrine_dql tuto)
     /**
      * @param string|null $term
-     * @return Comment[]
      */
-    public function findAllWithSearch(?string $term){
-
+    public function getWithSearchQueryBuilder(?string $term): QueryBuilder
+    {
         // innerjoin beacause comment is owner
         // With addSelect('a'), we're telling the QueryBuilder to select 
         // all of the comment columns and all of the article columns.
@@ -47,13 +47,20 @@ class CommentRepository extends ServiceEntityRepository
             ;
         }
 
+        // with paginator we need a query not an array of result
         return $qb
-            ->orderBy('c.createdAt', 'DESC')
-            ->getQuery()
-            ->getResult()
-        ;
+            ->orderBy('c.createdAt', 'DESC');
 
     }
+
+
+    public function commentsQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.createdAt', 'DESC');
+        ;
+    }
+
 
     // ccl: if your page has a lot of queries because Doctrine is making extra queries across a relationship, 
     // just join over that relationship and use addSelect() to fetch all the data you need at once.
